@@ -1,0 +1,32 @@
+<!-- This template file is used to display the details of a book. -->
+
+{% extends "base.html" %}
+<!-- This line extends the base.html template, which serves as the base layout for all pages. -->
+
+{% block title %}{{ book.title }}{% endblock %}
+<!-- This block sets the title of the page to the title of the book. -->
+
+{% block content %}
+    <div class="book-detail">
+        <h1>{{ book.title }}</h1>
+        <!-- This line displays the title of the book. -->
+
+        <p><strong>Author:</strong> {{ book.author }}</p>
+        <!-- This line displays the author of the book. -->
+
+        <p><strong>Publication Date:</strong> {{ book.publication_date }}</p>
+        <!-- This line displays the publication date of the book. -->
+
+        <p><strong>Price:</strong> ${{ book.price }}</p>
+        <!-- This line displays the price of the book. -->
+
+        <p><strong>Quantity:</strong> {{ book.quantity }}</p>
+        <!-- This line displays the quantity of the book. -->
+
+        <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+        <!-- This line displays the ISBN of the book. -->
+    </div>
+
+    <a href="{% url 'book_list' %}">Back to Book List</a>
+    <!-- This line creates a link to the book list page. -->
+{% endblock %}

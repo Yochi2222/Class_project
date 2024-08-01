@@ -1,0 +1,99 @@
+<!-- This template extends the "base.html" template -->
+{% extends "base.html" %}
+
+<!-- This block sets the title of the page to "Available Books" -->
+{% block title %}Available Books{% endblock %}
+
+<!-- This block contains the main content of the page -->
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <!-- This heading displays the page title as "Available Books" -->
+        <h1 class="page-title">Available Books</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <!-- This form allows users to search for books -->
+        <form action="{% url 'search_books' %}" method="get" class="search-form">
+            <div class="input-group">
+                <!-- This input field is used to enter the search query -->
+                <input type="text" name="q" class="form-control" placeholder="Search books..." value="{{ query|default:'' }}">
+                <!-- This button submits the search form -->
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="book-grid">
+    <!-- This loop iterates over the list of books -->
+    {% for book in books %}
+        <div class="book-card">
+            <div class="card-body">
+                <!-- This heading displays the book title and links to the book detail page -->
+                <h5 class="card-title"><a href="{% url 'book_detail' book.id %}" class="book-title">{{ book.title }}</a></h5>
+                <!-- This subtitle displays the book author -->
+                <h6 class="card-subtitle">{{ book.author }}</h6>
+                <p class="card-text">
+                    <!-- This paragraph displays the book price and quantity -->
+                    <strong>Price:</strong> ${{ book.price|floatformat:2 }}<br>
+                    <strong>Quantity:</strong> {{ book.quantity }}
+                </p>
+            </div>
+            <div class="card-footer">
+                <!-- This button links to the book detail page -->
+                <a href="{% url 'book_detail' book.id %}" class="btn btn-outline-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col">
+            <!-- This message is displayed when there are no books available -->
+            <p class="no-books-message">No books available.</p>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- This block displays pagination if there are multiple pages of books -->
+{% if books.has_other_pages %}
+    <nav aria-label="Page navigation" class="pagination-container">
+        <ul class="pagination">
+            <!-- This block displays the previous page link if available -->
+            {% if books.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" aria-hidden="true">&laquo;</span>
+                </li>
+            {% endif %}
+
+            <!-- This loop displays the page numbers and their links -->
+            {% for i in books.paginator.page_range %}
+                {% if books.number == i %}
+                    <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            <!-- This block displays the next page link if available -->
+            {% if books.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ books.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link" aria-hidden="true">&raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+{% endblock %}
